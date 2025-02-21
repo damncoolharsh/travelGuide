@@ -59,7 +59,7 @@ export default function Home(): React.JSX.Element {
   const onScrollEndDrag = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setIsScolling(false);
   };
-  const _renderContent = (item: DataType) => {
+  const _renderContent = (item: DataType, index: number) => {
     if (item.image) {
       return (
         <View style={styles.imageView}>
@@ -75,6 +75,7 @@ export default function Home(): React.JSX.Element {
         <View>
           <VideoPlayer
             url={item.video}
+            shouldStop={Math.abs(currentIndex - index) > 2}
             shouldPlay={!isScolling && item.index === currentIndex}
           />
         </View>
@@ -140,7 +141,7 @@ export default function Home(): React.JSX.Element {
   const renderItem = ({item, index}: {item: DataType; index: number}) => {
     return (
       <View style={styles.contentView}>
-        {_renderContent(item)}
+        {_renderContent(item, index)}
         {_renderHeader()}
         {_renderTextContent(item, index)}
         {_renderFooter()}
@@ -158,6 +159,7 @@ export default function Home(): React.JSX.Element {
         pagingEnabled
         bounces={false}
         decelerationRate={0.99}
+        disableIntervalMomentum
         onViewableItemsChanged={onViewableItemsChanged}
         onScrollBeginDrag={onScrollBeiginDrag}
         onScrollEndDrag={onScrollEndDrag}

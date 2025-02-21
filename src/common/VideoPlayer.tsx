@@ -1,4 +1,11 @@
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import Video, {
   OnBufferData,
@@ -10,6 +17,8 @@ import {SCREEN_HEIGHT, SCREEN_WIDTH} from '../utils/constants';
 type Props = {
   url: string;
   shouldPlay: boolean;
+  shouldStop: boolean;
+  style?: StyleProp<ViewStyle>;
   onVideoBuffer?: (isBuffering: boolean) => void;
 };
 
@@ -17,6 +26,8 @@ export default function VideoPlayer({
   url,
   shouldPlay,
   onVideoBuffer,
+  shouldStop = true,
+  style,
 }: Props): React.JSX.Element {
   const videoRef = useRef<VideoRef>(null);
 
@@ -32,21 +43,21 @@ export default function VideoPlayer({
   }, [shouldPlay]);
   // Video Events
   const onVideoBufferLocal = (event: OnBufferData) => {
-    console.log('onVideoBuffer');
+    // console.log('onVideoBuffer');
     onVideoBuffer?.(event.isBuffering);
   };
 
   const onVideoError = (event: OnVideoErrorData) => {
-    console.log('onVideoError');
+    // console.log('onVideoError');
   };
   return (
     <View>
       <Video
-        source={{uri: url}}
+        source={{uri: shouldStop ? undefined : url}}
         ref={videoRef}
         onBuffer={onVideoBufferLocal}
         onError={onVideoError}
-        style={styles.backgroundVideo}
+        style={[styles.backgroundVideo, style]}
         resizeMode="cover"
       />
     </View>
